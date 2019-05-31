@@ -9,12 +9,14 @@
 
 <body>
     <div id="svgContainer" style="border: dashed; width: 550px; height: 550px;">
-        <svg id="mainSVG" viewBox="0 0 550 550" xmlns="http://www.w3.org/2000/svg" view></svg> ,
-        <canvas id="cnv"></canvas>
+        <svg id="mainSVG" viewBox="0 0 550 550" xmlns="http://www.w3.org/2000/svg">
+            <g id="txtgrp"></g>
+        </svg>
+        <div style="display: none"><canvas id="cnv"></canvas></div>
     </div>
     <hr>
     <div id="controlPanel" style="display: none">
-        <textarea id="inputArea" rows="4" cols="50"></textarea><span><br/><button onclick="addTexts">Add Texts</button></span>
+        <textarea id="inputArea" rows="4" cols="50"></textarea><span><br/><button onclick="addTexts()">Add Texts</button></span>
     </div>
     <script src="app.js"></script>
 </body>
