@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
 
-<body>
-    <div id="svgContainer"><svg id="mainSVG"></svg></div>
-
-    </script>
+<head>
     <script src="opentype.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
 
+</head>
+
+<body>
+    <div id="svgContainer" style="border: dashed; width: 550px; height: 550px;">
+        <svg id="mainSVG" viewBox="0 0 550 550" xmlns="http://www.w3.org/2000/svg" view></svg> ,
+        <canvas id="cnv"></canvas>
+    </div>
+    <hr>
+    <option></option>
+    <textarea id="inputArea"></textarea>
+    <script src="app.js"></script>
 </body>
 
 </html>
