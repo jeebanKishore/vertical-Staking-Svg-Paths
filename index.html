@@ -10,9 +10,11 @@
 <body>
     <div id="svgContainer" style="border: dashed; width: 550px; height: 550px;">
         <svg id="mainSVG" viewBox="0 0 550 550" xmlns="http://www.w3.org/2000/svg">
-            <g id="txtgrp"></g>
+            <defs>
+                <g id="txtgrp"></g>
+            </defs>
+            <use xlink:href ="#txtgrp" x="100" y="50"/>
         </svg>
-        <div style="display: none"><canvas id="cnv"></canvas></div>
     </div>
     <hr>
     <div id="controlPanel" style="display: none">
