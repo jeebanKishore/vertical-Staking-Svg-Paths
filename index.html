@@ -3,7 +3,7 @@
 
 <head>
     <script src="opentype.js"></script>
-    <script src="jquery-3.4.1.min.js"></script>
+    <!-- <script src="jquery-3.4.1.min.js"></script> -->
 
 </head>
 
@@ -13,8 +13,9 @@
         <canvas id="cnv"></canvas>
     </div>
     <hr>
-    <option></option>
-    <textarea id="inputArea"></textarea>
+    <div id="controlPanel" style="display: none">
+        <textarea id="inputArea" rows="4" cols="50"></textarea><span><br/><button onclick="addTexts">Add Texts</button></span>
+    </div>
     <script src="app.js"></script>
 </body>
 
