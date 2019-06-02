@@ -1,9 +1,18 @@
 /////////////////////////////Variables///////////////////////////
 const MAX_WIDTH = 500;
-const svgns = 'http://www.w3.org/2000/svg';
+const svgView = document.getElementById('svgView');
+const SVGContainer = document.getElementById('svgContainer');
+const imageViewContainer = document.getElementById('imageViewContainer');
 const mainSVGElement = document.getElementById('mainSVG');
-const primarySVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-primarySVG.setAttributeNS("http://www.w3.org/2000/svg", 'id', 'mainSVG');
+const primarySVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+primarySVG.setAttributeNS('http://www.w3.org/2000/svg', 'id', 'mainSVG');
+primarySVG.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+primarySVG.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+primarySVG.setAttribute('height', '500');
+primarySVG.setAttribute('width', '500');
+primarySVG.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox', '0 0 500 500');
+const mainDef = document.createElementNS('http://www.w3.org/2000/svg', 'def');
+mainDef.setAttributeNS('http://www.w3.org/2000/svg', 'id', 'mainDef');
 const fontData = [{ 'name': 'BlackOpsOne', 'value': 'BlackOpsOne' }, { 'name': 'charlotte', 'value': 'charlotte' }, { 'name': 'Great Times Font', 'value': 'Great Times Font' }, { 'name': 'StellaAlpina', 'value': 'StellaAlpina' }];
 const font = [];
 const FONT_SIZE = 50;
@@ -23,6 +32,10 @@ const continueLoadingFonts = (fontsLoaded, totalFonts) => {
     loadFont('assets/' + fontData[fontsLoaded].value + '.otf');
 }
 
+const setImageToSVG = (img, svg) => {
+    var xml = (new XMLSerializer).serializeToString(svg);
+    img.src = "data:image/svg+xml;charset=utf-8," + xml;
+}
 const loadFont = (ttfpath) => {
     opentype.load(ttfpath, (err, _font) => {
         tempfont = _font;
@@ -49,9 +62,16 @@ const addTexts = () => {
     textLineArray = inputTextAreaValue.split('\n');
     const textFromLineArray = textLineArray[lineNumber - 1];
     const allBbox = [];
+    while (SVGContainer.firstChild) {
+        SVGContainer.removeChild(SVGContainer.firstChild);
+    }
+    while (primarySVG.firstChild) {
+        primarySVG.removeChild(primarySVG.firstChild);
+    }
+    primarySVG.appendChild(mainDef);
     tempBBox = constructPath(inputTextAreaValue, FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), lineNumber, textFromLineArray);
     allBbox.push(tempBBox);
-    console.log(allBbox);
+    console.log(allBbox, primarySVG);
 
 }
 
@@ -96,22 +116,29 @@ const constructPath = (text, fontSize, fontPositionNumber, lineNumber, textFromL
         pathString += textPaths[p].toSVGPath();
         mergedd += textPaths[p].toSVGPathd() + ' ';
     }
+    const bbox = group.getBBox();
     group.innerHTML += pathString.trim();
-    defsContainer.appendChild(group);
+    while (mainDef.firstChild) {
+        mainDef.removeChild(mainDef.firstChild);
+    }
+    mainDef.appendChild(group);
     const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + groupID);
     use.setAttributeNS('http://www.w3.org/2000/svg', 'x', '100');
     use.setAttributeNS('http://www.w3.org/2000/svg', 'y', '100');
-    mainSVGElement.appendChild(use);
-    const bbox = group.getBBox();
+    primarySVG.appendChild(use);
+    //setImageToSVG(mainImage,primarySVG);
+    SVGContainer.appendChild(primarySVG);
+    svg = SVGContainer.innerHTML;
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const image = svgView;
+    image.addEventListener('load', () => {URL.revokeObjectURL(url), { once: true };});
+    image.src = url;
     return bbox;
 }
 
 window.onload = () => {
-    /* setTimeout(function() {
-        var t = performance.timing;
-        console.log(t.loadEventEnd - t.responseEnd);
-    }, 0); */
     totalFonts = fontData.length;
     continueLoadingFonts(fontsLoaded, totalFonts);
 }
