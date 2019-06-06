@@ -1,23 +1,10 @@
 /////////////////////////////Variables///////////////////////////
 const MAX_WIDTH = 500;
-const svgView = document.getElementById('svgView');
-const SVGContainer = document.getElementById('svgContainer');
-const imageViewContainer = document.getElementById('imageViewContainer');
-const mainSVGElement = document.getElementById('mainSVG');
-const primarySVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-primarySVG.setAttributeNS('http://www.w3.org/2000/svg', 'id', 'mainSVG');
-primarySVG.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-primarySVG.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-primarySVG.setAttribute('height', '500');
-primarySVG.setAttribute('width', '500');
-primarySVG.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox', '0 0 500 500');
-const mainDef = document.createElementNS('http://www.w3.org/2000/svg', 'def');
-mainDef.setAttributeNS('http://www.w3.org/2000/svg', 'id', 'mainDef');
+const svgns = 'http://www.w3.org/2000/svg';
 const fontData = [{ 'name': 'BlackOpsOne', 'value': 'BlackOpsOne' }, { 'name': 'charlotte', 'value': 'charlotte' }, { 'name': 'Great Times Font', 'value': 'Great Times Font' }, { 'name': 'StellaAlpina', 'value': 'StellaAlpina' }];
 const font = [];
-const FONT_SIZE = 50;
+const FONT_SIZE = 72;
 const inputTextArea = document.getElementById('inputArea');
-const defsContainer = document.getElementById('defsContainer');
 let fontsLoaded = 0;
 let totalFonts = 0;
 let numoflines = 0;
@@ -32,10 +19,6 @@ const continueLoadingFonts = (fontsLoaded, totalFonts) => {
     loadFont('assets/' + fontData[fontsLoaded].value + '.otf');
 }
 
-const setImageToSVG = (img, svg) => {
-    var xml = (new XMLSerializer).serializeToString(svg);
-    img.src = "data:image/svg+xml;charset=utf-8," + xml;
-}
 const loadFont = (ttfpath) => {
     opentype.load(ttfpath, (err, _font) => {
         tempfont = _font;
@@ -62,26 +45,18 @@ const addTexts = () => {
     textLineArray = inputTextAreaValue.split('\n');
     const textFromLineArray = textLineArray[lineNumber - 1];
     const allBbox = [];
-    while (SVGContainer.firstChild) {
-        SVGContainer.removeChild(SVGContainer.firstChild);
-    }
-    while (primarySVG.firstChild) {
-        primarySVG.removeChild(primarySVG.firstChild);
-    }
-    primarySVG.appendChild(mainDef);
     tempBBox = constructPath(inputTextAreaValue, FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), lineNumber, textFromLineArray);
     allBbox.push(tempBBox);
-    console.log(allBbox, primarySVG);
+    console.log(allBbox);
 
 }
 
 
 const constructPath = (text, fontSize, fontPositionNumber, lineNumber, textFromLineArray) => {
-    const tempselectedfont = font[fontPositionNumber];
+    let tempselectedfont = font[fontPositionNumber];
     let textPaths = tempselectedfont.getPath(textFromLineArray, 0, fontSize * lineNumber, fontSize, { letterSpacing: letterSpacing });
-    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    const groupID = 'txtgrp' + lineNumber;
-    group.setAttributeNS('http://www.w3.org/2000/svg', 'id', groupID);
+    const group = document.getElementById('txtgrp');
+    //group.setAttributeNS('http://www.w3.org/2000/svg', 'preserveAspectRatio', 'xMidYMid meet');
     group.innerHTML = '';
     let pathString = '';
     let totalwidth = 0;
@@ -106,6 +81,12 @@ const constructPath = (text, fontSize, fontPositionNumber, lineNumber, textFromL
     mergedd = '';
     for (p = 0; p < textPaths.length; p++) {
         textPaths[p].fill = 'red';
+        //if($scope.patternselected.indexOf('#') != -1)
+        //textPaths[p].fill = 'url(#'+ $scope.patternselected +')';
+        //else
+        //textPaths[p].fill = $scope.patternselected;
+        //textPaths[p].fill = 'url(#'+$scope.patternselected+')';
+        //textPaths[p].fill = '#'+Math.floor(Math.random()*16777215).toString(16);
         if (p < pathlen)
             rgb = Math.min(100 + Math.ceil(p * 150 / pathlen), 255);
         else
@@ -113,32 +94,26 @@ const constructPath = (text, fontSize, fontPositionNumber, lineNumber, textFromL
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
+        //textPaths[p].arttype = $scope.artselected;
+        //textPaths[p].shapeData = shapeData;
         pathString += textPaths[p].toSVGPath();
         mergedd += textPaths[p].toSVGPathd() + ' ';
     }
-    const bbox = group.getBBox();
+
+    //scalerect.setAttributeNS(svgns, 'width', maxheight);
+    //scalerect.setAttributeNS(svgns, 'height', maxheight);
+    //scalerect.setAttributeNS(svgns, 'y', starty);
     group.innerHTML += pathString.trim();
-    while (mainDef.firstChild) {
-        mainDef.removeChild(mainDef.firstChild);
-    }
-    mainDef.appendChild(group);
-    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + groupID);
-    use.setAttributeNS('http://www.w3.org/2000/svg', 'x', '100');
-    use.setAttributeNS('http://www.w3.org/2000/svg', 'y', '100');
-    primarySVG.appendChild(use);
-    //setImageToSVG(mainImage,primarySVG);
-    SVGContainer.appendChild(primarySVG);
-    svg = SVGContainer.innerHTML;
-    const blob = new Blob([svg], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    const image = svgView;
-    image.addEventListener('load', () => {URL.revokeObjectURL(url), { once: true };});
-    image.src = url;
+    const bbox = group.getBBox();
     return bbox;
+    //generateShadow(0);
 }
 
 window.onload = () => {
+    /* setTimeout(function() {
+        var t = performance.timing;
+        console.log(t.loadEventEnd - t.responseEnd);
+    }, 0); */
     totalFonts = fontData.length;
     continueLoadingFonts(fontsLoaded, totalFonts);
 }
