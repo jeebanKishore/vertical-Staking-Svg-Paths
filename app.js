@@ -5,6 +5,12 @@ const fontData = [{ 'name': 'BlackOpsOne', 'value': 'BlackOpsOne' }, { 'name': '
 const font = [];
 const FONT_SIZE = 72;
 const inputTextArea = document.getElementById('inputArea');
+const mainSVG = document.getElementById('mainSVG');
+const pt = mainSVG.createSVGPoint();
+pt.x = 100;
+pt.y = 200;
+var mainSVGP = pt.matrixTransform(mainSVG.getScreenCTM().inverse());
+const group = document.getElementById('txtgrp');
 let fontsLoaded = 0;
 let totalFonts = 0;
 let numoflines = 0;
@@ -12,6 +18,7 @@ let letterSpacing = 0;
 let mergedd = '';
 let textLineArray = [];
 let inputTextAreaValue = '';
+let maxheight = 100;
 
 
 ////////////////////////Public Functiones///////////////////////
@@ -34,39 +41,36 @@ const loadFont = (ttfpath) => {
 
 const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
-const getLineNumber = () => inputTextAreaValue.substr(0, inputTextArea.selectionStart).split('\n').length;
-
 const addTexts = () => {
     //alert('I am here.');
     inputTextAreaValue = inputTextArea.value;
     if (inputTextAreaValue === '') inputTextAreaValue = ' ';
     numoflines = inputTextAreaValue.split('\n').length - 1;
-    const lineNumber = getLineNumber();
     textLineArray = inputTextAreaValue.split('\n');
-    const textFromLineArray = textLineArray[lineNumber - 1];
-    const allBbox = [];
-    tempBBox = constructPath(inputTextAreaValue, FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), lineNumber, textFromLineArray);
-    allBbox.push(tempBBox);
-    console.log(allBbox);
+    generateGroup(textLineArray.length);
+}
 
+const generateGroup = (numoflines) => {
+    console.log(textLineArray.length - (numoflines - 1));
+    const textFromLineArray = textLineArray[(textLineArray.length - (numoflines - 1)) - 1];
+    if (numoflines !== 0) {
+        numoflines--;
+        constructPath(FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), textFromLineArray, numoflines);
+    }
 }
 
 
-const constructPath = (text, fontSize, fontPositionNumber, lineNumber, textFromLineArray) => {
+const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflines) => {
+    let done = false;
     let tempselectedfont = font[fontPositionNumber];
-    let textPaths = tempselectedfont.getPath(textFromLineArray, 0, fontSize * lineNumber, fontSize, { letterSpacing: letterSpacing });
-    const group = document.getElementById('txtgrp');
-    //group.setAttributeNS('http://www.w3.org/2000/svg', 'preserveAspectRatio', 'xMidYMid meet');
-    group.innerHTML = '';
+    let textPaths = tempselectedfont.getPath(textFromLineArray, 0, fontSize, fontSize, { letterSpacing: letterSpacing });
     let pathString = '';
     let totalwidth = 0;
-    let maxheight = 0;
     let starty = 1000;
     let maxLetters = 0;
     for (t = 0; t < textLineArray.length; t++) {
         maxLetters = Math.max(textLineArray[t].length, maxLetters);
     }
-    //console.log(maxLetters);
     for (i = 0; i < textPaths.length; i++) {
         if (i <= maxLetters) {
             totalwidth += textPaths[i].width + letterSpacing;
@@ -77,43 +81,23 @@ const constructPath = (text, fontSize, fontPositionNumber, lineNumber, textFromL
             starty = Math.min(starty, textPaths[i].starty);
         }
     }
-    const pathlen = textPaths.length / 2;
     mergedd = '';
     for (p = 0; p < textPaths.length; p++) {
         textPaths[p].fill = 'red';
-        //if($scope.patternselected.indexOf('#') != -1)
-        //textPaths[p].fill = 'url(#'+ $scope.patternselected +')';
-        //else
-        //textPaths[p].fill = $scope.patternselected;
-        //textPaths[p].fill = 'url(#'+$scope.patternselected+')';
-        //textPaths[p].fill = '#'+Math.floor(Math.random()*16777215).toString(16);
-        if (p < pathlen)
-            rgb = Math.min(100 + Math.ceil(p * 150 / pathlen), 255);
-        else
-            rgb = Math.min(100 + Math.ceil((2 * pathlen - p) * 150 / (pathlen)), 255);
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
-        //textPaths[p].arttype = $scope.artselected;
-        //textPaths[p].shapeData = shapeData;
         pathString += textPaths[p].toSVGPath();
         mergedd += textPaths[p].toSVGPathd() + ' ';
     }
-
-    //scalerect.setAttributeNS(svgns, 'width', maxheight);
-    //scalerect.setAttributeNS(svgns, 'height', maxheight);
-    //scalerect.setAttributeNS(svgns, 'y', starty);
-    group.innerHTML += pathString.trim();
-    const bbox = group.getBBox();
-    return bbox;
-    //generateShadow(0);
+    const tempGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    tempGroup.innerHTML += pathString.trim();
+    const bbox = tempGroup.getBBox();
+    group.appendChild(tempGroup);
+    generateGroup(numoflines);
 }
 
 window.onload = () => {
-    /* setTimeout(function() {
-        var t = performance.timing;
-        console.log(t.loadEventEnd - t.responseEnd);
-    }, 0); */
     totalFonts = fontData.length;
     continueLoadingFonts(fontsLoaded, totalFonts);
 }
