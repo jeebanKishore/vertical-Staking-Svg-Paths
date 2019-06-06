@@ -19,6 +19,7 @@ let mergedd = '';
 let textLineArray = [];
 let inputTextAreaValue = '';
 let maxheight = 100;
+let startHeight = 100;
 
 
 ////////////////////////Public Functiones///////////////////////
@@ -47,27 +48,26 @@ const addTexts = () => {
     if (inputTextAreaValue === '') inputTextAreaValue = ' ';
     numoflines = inputTextAreaValue.split('\n').length - 1;
     textLineArray = inputTextAreaValue.split('\n');
-    generateGroup(textLineArray.length);
+    generateGroup(textLineArray.length, startHeight);
 }
 
-const generateGroup = (numoflines) => {
-    console.log(textLineArray.length - (numoflines - 1));
-    const textFromLineArray = textLineArray[(textLineArray.length - (numoflines - 1)) - 1];
+const generateGroup = (numoflines, nextheight) => {
     if (numoflines !== 0) {
+        const textFromLineArray = textLineArray[(textLineArray.length - (numoflines - 1)) - 1];
         numoflines--;
-        constructPath(FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), textFromLineArray, numoflines);
+        constructPath(FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), textFromLineArray, numoflines, nextheight);
     }
 }
 
 
-const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflines) => {
-    let done = false;
+const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflines, nextheight) => {
     let tempselectedfont = font[fontPositionNumber];
     let textPaths = tempselectedfont.getPath(textFromLineArray, 0, fontSize, fontSize, { letterSpacing: letterSpacing });
     let pathString = '';
     let totalwidth = 0;
     let starty = 1000;
     let maxLetters = 0;
+    let finalHeight = nextheight;
     for (t = 0; t < textLineArray.length; t++) {
         maxLetters = Math.max(textLineArray[t].length, maxLetters);
     }
@@ -76,7 +76,7 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
             totalwidth += textPaths[i].width + letterSpacing;
         }
 
-        maxheight = Math.max(maxheight, textPaths[i].height);
+        maxheight = Math.min(maxheight, textPaths[i].height);
         if (textPaths[i].starty) {
             starty = Math.min(starty, textPaths[i].starty);
         }
@@ -91,10 +91,17 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
         mergedd += textPaths[p].toSVGPathd() + ' ';
     }
     const tempGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    if (group.lastElementChild) {
+        const lastBoundBoxgroup = group.lastElementChild.getBBox();
+        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + 100);
+    } else {
+        finalHeight = nextheight;
+    }
+    console.log(finalHeight);
+    tempGroup.setAttributeNS('http://www.w3.org/2000/svg', 'style', 'transform: translate(10px, ' + finalHeight + 'px);');
     tempGroup.innerHTML += pathString.trim();
-    const bbox = tempGroup.getBBox();
     group.appendChild(tempGroup);
-    generateGroup(numoflines);
+    generateGroup(numoflines, finalHeight);
 }
 
 window.onload = () => {
