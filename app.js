@@ -153,7 +153,7 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
     } else {
         finalHeight = nextheight;
     }
-
+    
     group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + (finalHeight - textpathbbox.y) + ')">' + pathString.trim() + '</g>';
 
     generateGroup(numoflines, finalHeight);
