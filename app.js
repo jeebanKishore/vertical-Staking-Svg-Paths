@@ -1,6 +1,6 @@
 /////////////////////////////Variables///////////////////////////
-const MAX_WIDTH = 500;
-const centerPoint = MAX_WIDTH / 2;
+const maxWidth = 500;
+const centerPoint = maxWidth / 2;
 const svgns = 'http://www.w3.org/2000/svg';
 const fontData = ['amita-bold', 'berkshireswash-regular', 'Carrington', 'Courgette-Regular', 'england', 'Milkshake'];
 const font = [];
@@ -16,12 +16,14 @@ let fontsLoaded = 0;
 let totalFonts = 0;
 let numoflines = 0;
 let letterSpacing = 0;
-let mergedd = '';
 let textLineArray = [];
 let inputTextAreaValue = '';
 let maxheight = 50;
 let startHeight = 50;
 let templateLineOffset = 5;
+let allignMent = 'center';
+let leftOffset = 5;
+let rightOffset = 5;
 
 
 ////////////////////////Public Functiones///////////////////////
@@ -63,6 +65,19 @@ const addTexts = () => {
     generateGroup(textLineArray.length, startHeight);
 }
 
+const leftAllign = () => {
+    allignMent = 'left';
+    addTexts();
+}
+const centerAllign = () => {
+    allignMent = 'center';
+    addTexts();
+}
+const rightAllign = () => {
+    allignMent = 'right';
+    addTexts();
+}
+
 const generateGroup = (numoflines, nextheight) => {
     if (numoflines !== 0) {
         const textFromLineArray = textLineArray[(textLineArray.length - (numoflines - 1)) - 1];
@@ -94,23 +109,56 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
             starty = Math.min(starty, textPaths[i].starty);
         }
     }
-    mergedd = '';
+
     for (p = 0; p < textPaths.length; p++) {
         textPaths[p].fill = getRandomColor();
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
         pathString += textPaths[p].toSVGPath();
-        mergedd += textPaths[p].toSVGPathd() + ' ';
     }
-    finalHorizontalposition = Math.round(centerPoint - (totalwidth / 2));
-    if (group.lastElementChild) {
-        const lastBoundBoxgroup = group.lastElementChild.getBBox();
-        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
-    } else {
-        finalHeight = nextheight;
+
+    switch (allignMent) {
+        case 'left':
+            finalHorizontalposition = leftOffset;
+            if (group.lastElementChild) {
+                const lastBoundBoxgroup = group.lastElementChild.getBBox();
+                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+            } else {
+                finalHeight = nextheight;
+            }
+            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
+            break;
+        case 'right':
+            finalHorizontalposition = maxWidth - (totalwidth + rightOffset);
+            if (group.lastElementChild) {
+                const lastBoundBoxgroup = group.lastElementChild.getBBox();
+                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+            } else {
+                finalHeight = nextheight;
+            }
+            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
+            break;
+        case 'center':
+            finalHorizontalposition = Math.round(centerPoint - (totalwidth / 2));
+            if (group.lastElementChild) {
+                const lastBoundBoxgroup = group.lastElementChild.getBBox();
+                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+            } else {
+                finalHeight = nextheight;
+            }
+            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
+            break;
+        default:
+            finalHorizontalposition = Math.round(centerPoint - (totalwidth / 2));
+            if (group.lastElementChild) {
+                const lastBoundBoxgroup = group.lastElementChild.getBBox();
+                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+            } else {
+                finalHeight = nextheight;
+            }
+            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
     }
-    group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
     generateGroup(numoflines, finalHeight);
 }
 
