@@ -1,9 +1,10 @@
 /////////////////////////////Variables///////////////////////////
 const MAX_WIDTH = 500;
+const centerPoint = MAX_WIDTH / 2;
 const svgns = 'http://www.w3.org/2000/svg';
-const fontData = [{ 'name': 'BlackOpsOne', 'value': 'BlackOpsOne' }, { 'name': 'charlotte', 'value': 'charlotte' }, { 'name': 'Great Times Font', 'value': 'Great Times Font' }, { 'name': 'StellaAlpina', 'value': 'StellaAlpina' }];
+const fontData = ['amita-bold', 'berkshireswash-regular', 'Carrington', 'Courgette-Regular', 'england', 'Milkshake'];
 const font = [];
-const FONT_SIZE = 72;
+const FONT_SIZE = 52;
 const inputTextArea = document.getElementById('inputArea');
 const mainSVG = document.getElementById('mainSVG');
 const pt = mainSVG.createSVGPoint();
@@ -18,13 +19,14 @@ let letterSpacing = 0;
 let mergedd = '';
 let textLineArray = [];
 let inputTextAreaValue = '';
-let maxheight = 100;
-let startHeight = 100;
+let maxheight = 50;
+let startHeight = 50;
+let templateLineOffset = 5;
 
 
 ////////////////////////Public Functiones///////////////////////
 const continueLoadingFonts = (fontsLoaded, totalFonts) => {
-    loadFont('assets/' + fontData[fontsLoaded].value + '.otf');
+    loadFont('assets/' + fontData[fontsLoaded] + '.ttf');
 }
 
 const loadFont = (ttfpath) => {
@@ -40,6 +42,15 @@ const loadFont = (ttfpath) => {
     });
 }
 
+const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const addTexts = () => {
@@ -48,6 +59,7 @@ const addTexts = () => {
     if (inputTextAreaValue === '') inputTextAreaValue = ' ';
     numoflines = inputTextAreaValue.split('\n').length - 1;
     textLineArray = inputTextAreaValue.split('\n');
+    group.innerHTML = '';
     generateGroup(textLineArray.length, startHeight);
 }
 
@@ -68,6 +80,7 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
     let starty = 1000;
     let maxLetters = 0;
     let finalHeight = nextheight;
+    let finalHorizontalposition = centerPoint;
     for (t = 0; t < textLineArray.length; t++) {
         maxLetters = Math.max(textLineArray[t].length, maxLetters);
     }
@@ -83,26 +96,21 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
     }
     mergedd = '';
     for (p = 0; p < textPaths.length; p++) {
-        textPaths[p].fill = 'red';
+        textPaths[p].fill = getRandomColor();
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
         pathString += textPaths[p].toSVGPath();
         mergedd += textPaths[p].toSVGPathd() + ' ';
     }
-    var tempGroup = document.createElementNS(svgns, 'g');
+    finalHorizontalposition = Math.round(centerPoint - (totalwidth / 2));
     if (group.lastElementChild) {
         const lastBoundBoxgroup = group.lastElementChild.getBBox();
-        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + 5);
+        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
     } else {
         finalHeight = nextheight;
     }
-    console.log(finalHeight);
-    //tempGroup.setAttributeNS('http://www.w3.org/2000/svg', 'style', 'transform: translate(10, ' + finalHeight + ');');
-
-    group.innerHTML += '<g transform="translate(10,' + finalHeight + ')">' + pathString.trim() + '</g>';
-    //tempGroup.setAttributeNS(svgns, 'transform', 'translate(10,' + finalHeight + ')');
-    //group.appendChild(tempGroup);
+    group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
     generateGroup(numoflines, finalHeight);
 }
 
