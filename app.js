@@ -90,17 +90,19 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
         pathString += textPaths[p].toSVGPath();
         mergedd += textPaths[p].toSVGPathd() + ' ';
     }
-    const tempGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    var tempGroup = document.createElementNS(svgns, 'g');
     if (group.lastElementChild) {
         const lastBoundBoxgroup = group.lastElementChild.getBBox();
-        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + 100);
+        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + 5);
     } else {
         finalHeight = nextheight;
     }
     console.log(finalHeight);
-    tempGroup.setAttributeNS('http://www.w3.org/2000/svg', 'style', 'transform: translate(10px, ' + finalHeight + 'px);');
-    tempGroup.innerHTML += pathString.trim();
-    group.appendChild(tempGroup);
+    //tempGroup.setAttributeNS('http://www.w3.org/2000/svg', 'style', 'transform: translate(10, ' + finalHeight + ');');
+
+    group.innerHTML += '<g transform="translate(10,' + finalHeight + ')">' + pathString.trim() + '</g>';
+    //tempGroup.setAttributeNS(svgns, 'transform', 'translate(10,' + finalHeight + ')');
+    //group.appendChild(tempGroup);
     generateGroup(numoflines, finalHeight);
 }
 
