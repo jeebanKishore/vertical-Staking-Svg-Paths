@@ -7,10 +7,6 @@ const font = [];
 const FONT_SIZE = 52;
 const inputTextArea = document.getElementById('inputArea');
 const mainSVG = document.getElementById('mainSVG');
-const pt = mainSVG.createSVGPoint();
-pt.x = 100;
-pt.y = 200;
-var mainSVGP = pt.matrixTransform(mainSVG.getScreenCTM().inverse());
 const group = document.getElementById('txtgrp');
 let fontsLoaded = 0;
 let totalFonts = 0;
@@ -96,6 +92,7 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
     let maxLetters = 0;
     let finalHeight = nextheight;
     let finalHorizontalposition = centerPoint;
+    let fillColour = getRandomColor();
     for (t = 0; t < textLineArray.length; t++) {
         maxLetters = Math.max(textLineArray[t].length, maxLetters);
     }
@@ -111,7 +108,7 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
     }
 
     for (p = 0; p < textPaths.length; p++) {
-        textPaths[p].fill = getRandomColor();
+        textPaths[p].fill = fillColour;
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
