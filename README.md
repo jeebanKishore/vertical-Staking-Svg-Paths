@@ -1,2 +1,1 @@
-# vertical-Staking-Svg-Paths
-How to vertically stack svg paths
+This is a sample program to generate staked Svgs from multi line text.
