@@ -6,8 +6,10 @@ var fontData = ['Amadeus.ttf', 'Amatic-Bold.ttf', 'AmaticSC-Regular.ttf', 'Apper
 var font = [];
 var FONT_SIZE = 52;
 var inputTextArea = document.getElementById('inputArea');
+inputTextArea.value = "Hello\nWorld\nHi\nThere"
 var mainSVG = document.getElementById('mainSVG');
 var group = document.getElementById('txtgrp');
+var testgrp = document.getElementById('testgrp');
 var fontsLoaded = 0;
 var totalFonts = 0;
 var numoflines = 0;
@@ -117,68 +119,45 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
     }
 
     for (p = 0; p < textPaths.length; p++) {
-        textPaths[p].fill = fillColour;
+        textPaths[p].fill = 'black';
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
         pathString += textPaths[p].toSVGPath();
     }
 
+    testgrp.innerHTML = pathString.trim();
+    var textpathbbox = testgrp.getBBox();
+
+    //console.log(textpathbbox);
+
     switch (allignMent) {
         case 'left':
             finalHorizontalposition = leftOffset;
-
-            if (group.lastElementChild) {
-                var lastBoundBoxgroup = group.lastElementChild.getBBox();
-                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
-            } else {
-                finalHeight = nextheight;
-            }
-
-            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
             break;
 
         case 'right':
             finalHorizontalposition = maxWidth - (totalwidth + rightOffset);
-
-            if (group.lastElementChild) {
-                var _lastBoundBoxgroup = group.lastElementChild.getBBox();
-
-                finalHeight = Math.round(_lastBoundBoxgroup.height + nextheight + templateLineOffset);
-            } else {
-                finalHeight = nextheight;
-            }
-
-            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
             break;
 
         case 'center':
             finalHorizontalposition = Math.round(centerPoint - totalwidth / 2);
-
-            if (group.lastElementChild) {
-                var _lastBoundBoxgroup2 = group.lastElementChild.getBBox();
-
-                finalHeight = Math.round(_lastBoundBoxgroup2.height + nextheight + templateLineOffset);
-            } else {
-                finalHeight = nextheight;
-            }
-
-            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
             break;
 
         default:
             finalHorizontalposition = Math.round(centerPoint - totalwidth / 2);
 
-            if (group.lastElementChild) {
-                var _lastBoundBoxgroup3 = group.lastElementChild.getBBox();
-
-                finalHeight = Math.round(_lastBoundBoxgroup3.height + nextheight + templateLineOffset);
-            } else {
-                finalHeight = nextheight;
-            }
-
-            group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
     }
+
+    if (group.lastElementChild) {
+        var lastBoundBoxgroup = group.lastElementChild.getBBox();
+        finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+    } else {
+        finalHeight = nextheight;
+    }
+
+    group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + (finalHeight - textpathbbox.y) + ')">' + pathString.trim() + '</g>';
+            
 
     generateGroup(numoflines, finalHeight);
 };
