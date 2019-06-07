@@ -17,7 +17,7 @@ var letterSpacing = 0;
 var textLineArray = [];
 var inputTextAreaValue = '';
 var maxheight = 50;
-var startHeight = 50;
+var startHeight = 10;
 var templateLineOffset = 5;
 var allignMent = 'center';
 var leftOffset = 5;
@@ -144,7 +144,6 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
 
         default:
             finalHorizontalposition = Math.round(centerPoint - totalwidth / 2);
-
     }
 
     if (group.lastElementChild) {
@@ -153,7 +152,7 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
     } else {
         finalHeight = nextheight;
     }
-
+    
     group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + (finalHeight - textpathbbox.y) + ')">' + pathString.trim() + '</g>';
 
     generateGroup(numoflines, finalHeight);
