@@ -1,57 +1,60 @@
 /////////////////////////////Variables///////////////////////////
-const maxWidth = 500;
-const centerPoint = maxWidth / 2;
-const svgns = 'http://www.w3.org/2000/svg';
-const fontData = ['Amadeus.ttf', 'Amatic-Bold.ttf', 'AmaticSC-Regular.ttf', 'AppertoAlternateGoth3D.ttf', 'BEBAS.ttf', 'BOYCOTT_.ttf', 'BROKEN15.ttf', 'Capture_it.ttf', 'Carrington.ttf', 'Courgette-Regular.ttf', 'DISTGRG_.ttf', 'DJB Letter Game Tiles 3.ttf', 'FancyPants.ttf', 'Flavors-Regular.ttf', 'GREALN__.ttf', 'Gondola_SD-Swash.ttf', 'Gondola_SD.ttf', 'HVD_Bodedo.ttf', 'HVD_Poster.ttf', 'Homestead-Display.ttf', 'Impact_Label.ttf', 'KOMIKAX_.ttf', 'Komika_Hand_Italic.ttf', 'Kristi.ttf', 'Matiz.ttf', 'Milkshake.ttf', 'Monthoers.ttf', 'Ostrich Rounded.ttf', 'PermanentMarker.ttf', 'PlayfairDisplaySC-Regular.ttf', 'SF_Toontime_Bold.ttf', 'Starstrp.ttf', 'TheanoDidot-Regular.ttf', 'TrashHand.ttf', 'TungusFont_Tinet.ttf', 'UnitedStates.ttf', 'Windsong.ttf', 'againts.ttf', 'amita-bold.ttf', 'berkshireswash-regular.ttf', 'edo.ttf', 'england.ttf', 'gagalin.ttf', 'garto16.ttf', 'porter-sans-inline-block-webfont.ttf', 'sedgwick_co.ttf'];
-const font = [];
-const FONT_SIZE = 52;
-const inputTextArea = document.getElementById('inputArea');
-const mainSVG = document.getElementById('mainSVG');
-const group = document.getElementById('txtgrp');
-let fontsLoaded = 0;
-let totalFonts = 0;
-let numoflines = 0;
-let letterSpacing = 0;
-let textLineArray = [];
-let inputTextAreaValue = '';
-let maxheight = 50;
-let startHeight = 50;
-let templateLineOffset = 5;
-let allignMent = 'center';
-let leftOffset = 5;
-let rightOffset = 5;
+var maxWidth = 500;
+var centerPoint = maxWidth / 2;
+var svgns = 'http://www.w3.org/2000/svg';
+var fontData = ['Amadeus.ttf', 'Amatic-Bold.ttf', 'AmaticSC-Regular.ttf', 'AppertoAlternateGoth3D.ttf', 'BEBAS.ttf', 'BOYCOTT_.ttf', 'BROKEN15.ttf', 'Capture_it.ttf', 'Carrington.ttf', 'Courgette-Regular.ttf', 'DISTGRG_.ttf', 'DJB Letter Game Tiles 3.ttf', 'FancyPants.ttf', 'Flavors-Regular.ttf', 'GREALN__.ttf', 'Gondola_SD-Swash.ttf', 'Gondola_SD.ttf', 'HVD_Bodedo.ttf', 'HVD_Poster.ttf', 'Homestead-Display.ttf', 'Impact_Label.ttf', 'KOMIKAX_.ttf', 'Komika_Hand_Italic.ttf', 'Kristi.ttf', 'Matiz.ttf', 'Milkshake.ttf', 'Monthoers.ttf', 'Ostrich Rounded.ttf', 'PermanentMarker.ttf', 'PlayfairDisplaySC-Regular.ttf', 'SF_Toontime_Bold.ttf', 'Starstrp.ttf', 'TheanoDidot-Regular.ttf', 'TrashHand.ttf', 'TungusFont_Tinet.ttf', 'UnitedStates.ttf', 'Windsong.ttf', 'againts.ttf', 'amita-bold.ttf', 'berkshireswash-regular.ttf', 'edo.ttf', 'england.ttf', 'gagalin.ttf', 'garto16.ttf', 'porter-sans-inline-block-webfont.ttf', 'sedgwick_co.ttf'];
+var font = [];
+var FONT_SIZE = 52;
+var inputTextArea = document.getElementById('inputArea');
+var mainSVG = document.getElementById('mainSVG');
+var group = document.getElementById('txtgrp');
+var fontsLoaded = 0;
+var totalFonts = 0;
+var numoflines = 0;
+var letterSpacing = 0;
+var textLineArray = [];
+var inputTextAreaValue = '';
+var maxheight = 50;
+var startHeight = 50;
+var templateLineOffset = 5;
+var allignMent = 'center';
+var leftOffset = 5;
+var rightOffset = 5; ////////////////////////Public Functiones///////////////////////
 
-
-////////////////////////Public Functiones///////////////////////
-const continueLoadingFonts = (fontsLoaded, totalFonts) => {
+var continueLoadingFonts = function continueLoadingFonts(fontsLoaded, totalFonts) {
     loadFont('assets/' + fontData[fontsLoaded]);
-}
+};
 
-const loadFont = (ttfpath) => {
-    opentype.load(ttfpath, (err, _font) => {
+var loadFont = function loadFont(ttfpath) {
+    opentype.load(ttfpath, function(err, _font) {
         tempfont = _font;
         font.push(tempfont);
         fontsLoaded++;
+
         if (fontsLoaded < totalFonts) {
             continueLoadingFonts(fontsLoaded, totalFonts);
         } else {
             document.getElementById('controlPanel').style.cssText = 'display: block';
         }
     });
-}
+};
 
-const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
+var getRandomColor = function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+
     for (var i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
     }
+
     return color;
-}
+};
 
-const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+var randomIntFromInterval = function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+};
 
-const addTexts = () => {
+var addTexts = function addTexts() {
     //alert('I am here.');
     inputTextAreaValue = inputTextArea.value;
     if (inputTextAreaValue === '') inputTextAreaValue = ' ';
@@ -59,49 +62,55 @@ const addTexts = () => {
     textLineArray = inputTextAreaValue.split('\n');
     group.innerHTML = '';
     generateGroup(textLineArray.length, startHeight);
-}
+};
 
-const leftAllign = () => {
+var leftAllign = function leftAllign() {
     allignMent = 'left';
     addTexts();
-}
-const centerAllign = () => {
+};
+
+var centerAllign = function centerAllign() {
     allignMent = 'center';
     addTexts();
-}
-const rightAllign = () => {
+};
+
+var rightAllign = function rightAllign() {
     allignMent = 'right';
     addTexts();
-}
+};
 
-const generateGroup = (numoflines, nextheight) => {
+var generateGroup = function generateGroup(numoflines, nextheight) {
     if (numoflines !== 0) {
-        const textFromLineArray = textLineArray[(textLineArray.length - (numoflines - 1)) - 1];
+        var textFromLineArray = textLineArray[textLineArray.length - (numoflines - 1) - 1];
         numoflines--;
         constructPath(FONT_SIZE, randomIntFromInterval(0, totalFonts - 1), textFromLineArray, numoflines, nextheight);
     }
-}
+};
 
+var constructPath = function constructPath(fontSize, fontPositionNumber, textFromLineArray, numoflines, nextheight) {
+    var tempselectedfont = font[fontPositionNumber];
+    var textPaths = tempselectedfont.getPath(textFromLineArray, 0, fontSize, fontSize, {
+        letterSpacing: letterSpacing
+    });
+    var pathString = '';
+    var totalwidth = 0;
+    var starty = 1000;
+    var maxLetters = 0;
+    var finalHeight = nextheight;
+    var finalHorizontalposition = centerPoint;
+    var fillColour = getRandomColor();
 
-const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflines, nextheight) => {
-    let tempselectedfont = font[fontPositionNumber];
-    let textPaths = tempselectedfont.getPath(textFromLineArray, 0, fontSize, fontSize, { letterSpacing: letterSpacing });
-    let pathString = '';
-    let totalwidth = 0;
-    let starty = 1000;
-    let maxLetters = 0;
-    let finalHeight = nextheight;
-    let finalHorizontalposition = centerPoint;
-    let fillColour = getRandomColor();
     for (t = 0; t < textLineArray.length; t++) {
         maxLetters = Math.max(textLineArray[t].length, maxLetters);
     }
+
     for (i = 0; i < textPaths.length; i++) {
         if (i <= maxLetters) {
             totalwidth += textPaths[i].width + letterSpacing;
         }
 
         maxheight = Math.min(maxheight, textPaths[i].height);
+
         if (textPaths[i].starty) {
             starty = Math.min(starty, textPaths[i].starty);
         }
@@ -118,48 +127,63 @@ const constructPath = (fontSize, fontPositionNumber, textFromLineArray, numoflin
     switch (allignMent) {
         case 'left':
             finalHorizontalposition = leftOffset;
+
             if (group.lastElementChild) {
-                const lastBoundBoxgroup = group.lastElementChild.getBBox();
+                var lastBoundBoxgroup = group.lastElementChild.getBBox();
                 finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
             } else {
                 finalHeight = nextheight;
             }
+
             group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
             break;
+
         case 'right':
             finalHorizontalposition = maxWidth - (totalwidth + rightOffset);
+
             if (group.lastElementChild) {
-                const lastBoundBoxgroup = group.lastElementChild.getBBox();
-                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+                var _lastBoundBoxgroup = group.lastElementChild.getBBox();
+
+                finalHeight = Math.round(_lastBoundBoxgroup.height + nextheight + templateLineOffset);
             } else {
                 finalHeight = nextheight;
             }
+
             group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
             break;
+
         case 'center':
-            finalHorizontalposition = Math.round(centerPoint - (totalwidth / 2));
+            finalHorizontalposition = Math.round(centerPoint - totalwidth / 2);
+
             if (group.lastElementChild) {
-                const lastBoundBoxgroup = group.lastElementChild.getBBox();
-                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+                var _lastBoundBoxgroup2 = group.lastElementChild.getBBox();
+
+                finalHeight = Math.round(_lastBoundBoxgroup2.height + nextheight + templateLineOffset);
             } else {
                 finalHeight = nextheight;
             }
+
             group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
             break;
+
         default:
-            finalHorizontalposition = Math.round(centerPoint - (totalwidth / 2));
+            finalHorizontalposition = Math.round(centerPoint - totalwidth / 2);
+
             if (group.lastElementChild) {
-                const lastBoundBoxgroup = group.lastElementChild.getBBox();
-                finalHeight = Math.round(lastBoundBoxgroup.height + nextheight + templateLineOffset);
+                var _lastBoundBoxgroup3 = group.lastElementChild.getBBox();
+
+                finalHeight = Math.round(_lastBoundBoxgroup3.height + nextheight + templateLineOffset);
             } else {
                 finalHeight = nextheight;
             }
+
             group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + finalHeight + ')">' + pathString.trim() + '</g>';
     }
-    generateGroup(numoflines, finalHeight);
-}
 
-window.onload = () => {
+    generateGroup(numoflines, finalHeight);
+};
+
+window.onload = function() {
     totalFonts = fontData.length;
     continueLoadingFonts(fontsLoaded, totalFonts);
-}
+};
