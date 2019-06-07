@@ -17,11 +17,12 @@ var letterSpacing = 0;
 var textLineArray = [];
 var inputTextAreaValue = '';
 var maxheight = 50;
-var startHeight = 50;
+var startHeight = 10;
 var templateLineOffset = 5;
 var allignMent = 'center';
 var leftOffset = 5;
-var rightOffset = 5; ////////////////////////Public Functiones///////////////////////
+var rightOffset = 5;
+////////////////////////Public Functiones///////////////////////
 
 var continueLoadingFonts = function continueLoadingFonts(fontsLoaded, totalFonts) {
     loadFont('assets/' + fontData[fontsLoaded]);
@@ -57,9 +58,9 @@ var randomIntFromInterval = function randomIntFromInterval(min, max) {
 };
 
 var addTexts = function addTexts() {
-    //alert('I am here.');
     inputTextAreaValue = inputTextArea.value;
-    if (inputTextAreaValue === '') inputTextAreaValue = ' ';
+    if (inputTextAreaValue === '')
+        inputTextAreaValue = ' ';
     numoflines = inputTextAreaValue.split('\n').length - 1;
     textLineArray = inputTextAreaValue.split('\n');
     group.innerHTML = '';
@@ -144,7 +145,6 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
 
         default:
             finalHorizontalposition = Math.round(centerPoint - totalwidth / 2);
-
     }
 
     if (group.lastElementChild) {
