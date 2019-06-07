@@ -119,7 +119,7 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
     }
 
     for (p = 0; p < textPaths.length; p++) {
-        textPaths[p].fill = 'black';
+        textPaths[p].fill = fillColour;
         textPaths[p].totalwidth = totalwidth;
         textPaths[p].maxheight = maxheight;
         textPaths[p].starty = starty;
@@ -128,8 +128,6 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
 
     testgrp.innerHTML = pathString.trim();
     var textpathbbox = testgrp.getBBox();
-
-    //console.log(textpathbbox);
 
     switch (allignMent) {
         case 'left':
@@ -157,7 +155,6 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
     }
 
     group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + (finalHeight - textpathbbox.y) + ')">' + pathString.trim() + '</g>';
-            
 
     generateGroup(numoflines, finalHeight);
 };
