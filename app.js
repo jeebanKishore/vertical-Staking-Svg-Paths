@@ -2,7 +2,7 @@
 var maxWidth = 500;
 var centerPoint = maxWidth / 2;
 var svgns = 'http://www.w3.org/2000/svg';
-var fontData = ['Amadeus.ttf', 'Amatic-Bold.ttf', 'AmaticSC-Regular.ttf', 'AppertoAlternateGoth3D.ttf', 'BEBAS.ttf', 'BOYCOTT_.ttf', 'BROKEN15.ttf', 'Capture_it.ttf', 'Carrington.ttf', 'Courgette-Regular.ttf', 'DISTGRG_.ttf', 'DJB Letter Game Tiles 3.ttf', 'FancyPants.ttf', 'Flavors-Regular.ttf', 'GREALN__.ttf', 'Gondola_SD-Swash.ttf', 'Gondola_SD.ttf', 'HVD_Bodedo.ttf', 'HVD_Poster.ttf', 'Homestead-Display.ttf', 'Impact_Label.ttf', 'KOMIKAX_.ttf', 'Komika_Hand_Italic.ttf', 'Kristi.ttf', 'Matiz.ttf', 'Milkshake.ttf', 'Monthoers.ttf', 'Ostrich Rounded.ttf', 'PermanentMarker.ttf', 'PlayfairDisplaySC-Regular.ttf', 'SF_Toontime_Bold.ttf', 'Starstrp.ttf', 'TheanoDidot-Regular.ttf', 'TrashHand.ttf', 'TungusFont_Tinet.ttf', 'UnitedStates.ttf', 'Windsong.ttf', 'againts.ttf', 'amita-bold.ttf', 'berkshireswash-regular.ttf', 'edo.ttf', 'england.ttf', 'gagalin.ttf', 'garto16.ttf', 'porter-sans-inline-block-webfont.ttf', 'sedgwick_co.ttf'];
+var fontData = ['Amadeus.ttf', 'Amatic-Bold.ttf', 'AmaticSC-Regular.ttf', 'AppertoAlternateGoth3D.ttf', 'BOYCOTT_.ttf', 'Capture_it.ttf', 'Carrington.ttf', 'Courgette-Regular.ttf', 'DISTGRG_.ttf', 'DJB Letter Game Tiles 3.ttf', 'FancyPants.ttf', 'Flavors-Regular.ttf', 'GREALN__.ttf', 'Gondola_SD-Swash.ttf', 'Gondola_SD.ttf', 'HVD_Bodedo.ttf', 'HVD_Poster.ttf', 'Homestead-Display.ttf', 'Impact_Label.ttf', 'KOMIKAX_.ttf', 'Komika_Hand_Italic.ttf', 'Kristi.ttf', 'Matiz.ttf', 'Milkshake.ttf', 'Monthoers.ttf', 'Ostrich Rounded.ttf', 'PermanentMarker.ttf', 'PlayfairDisplaySC-Regular.ttf', 'SF_Toontime_Bold.ttf', 'Starstrp.ttf', 'TheanoDidot-Regular.ttf', 'TrashHand.ttf', 'TungusFont_Tinet.ttf', 'UnitedStates.ttf', 'Windsong.ttf', 'againts.ttf', 'amita-bold.ttf', 'berkshireswash-regular.ttf', 'edo.ttf', 'england.ttf', 'gagalin.ttf', 'garto16.ttf', 'porter-sans-inline-block-webfont.ttf', 'sedgwick_co.ttf'];
 var font = [];
 var FONT_SIZE = 52;
 var inputTextArea = document.getElementById('inputArea');
@@ -153,7 +153,7 @@ var constructPath = function constructPath(fontSize, fontPositionNumber, textFro
     } else {
         finalHeight = nextheight;
     }
-    
+
     group.innerHTML += '<g transform="translate(' + finalHorizontalposition + ',' + (finalHeight - textpathbbox.y) + ')">' + pathString.trim() + '</g>';
 
     generateGroup(numoflines, finalHeight);
